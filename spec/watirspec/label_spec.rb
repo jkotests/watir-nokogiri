@@ -43,9 +43,11 @@ describe "Label" do
   end
 
   describe "click" do
-    it "fires the onclick event" do
-      browser.label(:id, 'first_label').click
-      messages.first.should == 'label'
+    not_compliant_on :watir_nokogiri do
+      it "fires the onclick event" do
+        browser.label(:id, 'first_label').click
+        messages.first.should == 'label'
+      end
     end
   end
 

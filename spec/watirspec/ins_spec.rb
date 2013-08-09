@@ -115,12 +115,14 @@ describe "Ins" do
 
   # Other
   describe "#click" do
-    it "fires events" do
-      browser.ins(:class, 'footer').text.should_not include('Javascript')
-      browser.ins(:class, 'footer').click
-      browser.ins(:class, 'footer').text.should include('Javascript')
+    not_compliant_on :watir_nokogiri do
+      it "fires events" do
+        browser.ins(:class, 'footer').text.should_not include('Javascript')
+        browser.ins(:class, 'footer').click
+        browser.ins(:class, 'footer').text.should include('Javascript')
+      end
     end
-
+    
     it "raises UnknownObjectException if the ins doesn't exist" do
       lambda { browser.ins(:id, "no_such_id").click }.should raise_error(UnknownObjectException)
       lambda { browser.ins(:title, "no_such_title").click }.should raise_error(UnknownObjectException)

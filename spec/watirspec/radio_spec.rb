@@ -31,7 +31,7 @@ describe "Radio" do
 
     it "returns true if the radio button exists (search by name and value)" do
       browser.radio(:name => "new_user_newsletter", :value => 'yes').should exist
-      browser.radio(:xpath, "//input[@name='new_user_newsletter' and @value='yes']").set
+      browser.radio(:xpath, "//input[@name='new_user_newsletter' and @value='yes']").should exist
     end
 
     it "returns true for element with upper case type" do
@@ -195,45 +195,49 @@ describe "Radio" do
   end
 
   describe "#set" do
-    it "sets the radio button" do
-      browser.radio(:id, "new_user_newsletter_no").set
-      browser.radio(:id, "new_user_newsletter_no").should be_set
-    end
+    not_compliant_on :watir_nokogiri do
+      it "sets the radio button" do
+        browser.radio(:id, "new_user_newsletter_no").set
+        browser.radio(:id, "new_user_newsletter_no").should be_set
+      end
 
-    it "sets the radio button when found by :xpath" do
-      browser.radio(:xpath, "//input[@id='new_user_newsletter_no']").set
-      browser.radio(:xpath, "//input[@id='new_user_newsletter_no']").should be_set
-    end
+      it "sets the radio button when found by :xpath" do
+        browser.radio(:xpath, "//input[@id='new_user_newsletter_no']").set
+        browser.radio(:xpath, "//input[@id='new_user_newsletter_no']").should be_set
+      end
 
-    it "fires the onclick event" do
-      browser.radio(:id, "new_user_newsletter_no").set
-      browser.radio(:id, "new_user_newsletter_yes").set
-      messages.should == ["clicked: new_user_newsletter_no", "clicked: new_user_newsletter_yes"]
-    end
+      it "fires the onclick event" do
+        browser.radio(:id, "new_user_newsletter_no").set
+        browser.radio(:id, "new_user_newsletter_yes").set
+        messages.should == ["clicked: new_user_newsletter_no", "clicked: new_user_newsletter_yes"]
+      end
 
-    # http://webbugtrack.blogspot.com/2007/11/bug-193-onchange-does-not-fire-properly.html
-    not_compliant_on :internet_explorer do
-      it "fires the onchange event" do
-        browser.radio(:value, 'certainly').set
-        messages.should == ["changed: new_user_newsletter"]
+      # http://webbugtrack.blogspot.com/2007/11/bug-193-onchange-does-not-fire-properly.html
+      not_compliant_on :internet_explorer do
+        it "fires the onchange event" do
+          browser.radio(:value, 'certainly').set
+          messages.should == ["changed: new_user_newsletter"]
 
-        browser.radio(:value, 'certainly').set
-        messages.should == ["changed: new_user_newsletter"] # no event fired here - didn't change
+          browser.radio(:value, 'certainly').set
+          messages.should == ["changed: new_user_newsletter"] # no event fired here - didn't change
 
-        browser.radio(:value, 'yes').set
-        browser.radio(:value, 'certainly').set
-        messages.should == ["changed: new_user_newsletter", "clicked: new_user_newsletter_yes", "changed: new_user_newsletter"]
+          browser.radio(:value, 'yes').set
+          browser.radio(:value, 'certainly').set
+          messages.should == ["changed: new_user_newsletter", "clicked: new_user_newsletter_yes", "changed: new_user_newsletter"]
+        end
       end
     end
-
+    
     it "raises UnknownObjectException if the radio button doesn't exist" do
       lambda { browser.radio(:name, "no_such_name").set  }.should raise_error(UnknownObjectException)
       lambda { browser.radio(:xpath, "//input[@name='no_such_name']").set  }.should raise_error(UnknownObjectException)
     end
-
-    it "raises ObjectDisabledException if the radio is disabled" do
-      lambda { browser.radio(:id, "new_user_newsletter_nah").set  }.should raise_error(ObjectDisabledException)
-      lambda { browser.radio(:xpath, "//input[@id='new_user_newsletter_nah']").set  }.should raise_error(ObjectDisabledException )
+    
+    not_compliant_on :watir_nokogiri do
+      it "raises ObjectDisabledException if the radio is disabled" do
+        lambda { browser.radio(:id, "new_user_newsletter_nah").set  }.should raise_error(ObjectDisabledException)
+        lambda { browser.radio(:xpath, "//input[@id='new_user_newsletter_nah']").set  }.should raise_error(ObjectDisabledException )
+      end
     end
   end
 
@@ -247,14 +251,16 @@ describe "Radio" do
       browser.radio(:id, "new_user_newsletter_no").should_not be_set
     end
 
-    it "returns the state for radios with string values" do
-      browser.radio(:name => "new_user_newsletter", :value => 'no').should_not be_set
-      browser.radio(:name => "new_user_newsletter", :value => 'no').set
-      browser.radio(:name => "new_user_newsletter", :value => 'no').should be_set
-      browser.radio(:name => "new_user_newsletter", :value => 'yes').set
-      browser.radio(:name => "new_user_newsletter", :value => 'no').should_not be_set
-    end
-
+    not_compliant_on :watir_nokogiri do
+      it "returns the state for radios with string values" do
+        browser.radio(:name => "new_user_newsletter", :value => 'no').should_not be_set
+        browser.radio(:name => "new_user_newsletter", :value => 'no').set
+        browser.radio(:name => "new_user_newsletter", :value => 'no').should be_set
+        browser.radio(:name => "new_user_newsletter", :value => 'yes').set
+        browser.radio(:name => "new_user_newsletter", :value => 'no').should_not be_set
+      end
+    end 
+    
     it "raises UnknownObjectException if the radio button doesn't exist" do
       lambda { browser.radio(:id, "no_such_id").set?  }.should raise_error(UnknownObjectException)
       lambda { browser.radio(:xpath, "//input[@id='no_such_id']").set?  }.should raise_error(UnknownObjectException)

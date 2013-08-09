@@ -106,41 +106,47 @@ describe "Element" do
   describe "#to_subtype" do
     it "returns a more precise subtype of Element (input element)" do
       el = browser.element(:xpath => "//input[@type='radio']").to_subtype
-      el.should be_kind_of(Watir::Radio)
+      el.should be_kind_of(WatirNokogiri::Radio)
     end
 
     it "returns a more precise subtype of Element" do
       el = browser.element(:xpath => "//*[@id='messages']").to_subtype
-      el.should be_kind_of(Watir::Div)
+      el.should be_kind_of(WatirNokogiri::Div)
     end
   end
 
-  describe "#focus" do
-    bug "http://code.google.com/p/selenium/issues/detail?id=157", [:webdriver, :firefox] do
-      it "fires the onfocus event for the given element" do
-        tf = browser.text_field(:id, "new_user_occupation")
-        tf.value.should == "Developer"
-        tf.focus
+  not_compliant_on :watir_nokogiri do
+    describe "#focus" do
+      bug "http://code.google.com/p/selenium/issues/detail?id=157", [:webdriver, :firefox] do
+        it "fires the onfocus event for the given element" do
+          tf = browser.text_field(:id, "new_user_occupation")
+          tf.value.should == "Developer"
+          tf.focus
+          browser.div(:id, "onfocus_test").text.should == "changed by onfocus event"
+        end
+      end
+    end
+  end
+  
+  not_compliant_on :watir_nokogiri do
+    describe "#focused?" do
+      it "knows if the element is focused" do
+        browser.element(:id => 'new_user_first_name').should be_focused
+        browser.element(:id => 'new_user_last_name').should_not be_focused
+      end
+    end
+  end
+  
+  not_compliant_on :watir_nokogiri do
+    describe "#fire_event" do
+      it "should fire the given event" do
+        browser.div(:id, "onfocus_test").text.should be_empty
+        browser.text_field(:id, "new_user_occupation").fire_event('onfocus')
         browser.div(:id, "onfocus_test").text.should == "changed by onfocus event"
       end
     end
   end
-
-  describe "#focused?" do
-    it "knows if the element is focused" do
-      browser.element(:id => 'new_user_first_name').should be_focused
-      browser.element(:id => 'new_user_last_name').should_not be_focused
-    end
-  end
-
-  describe "#fire_event" do
-    it "should fire the given event" do
-      browser.div(:id, "onfocus_test").text.should be_empty
-      browser.text_field(:id, "new_user_occupation").fire_event('onfocus')
-      browser.div(:id, "onfocus_test").text.should == "changed by onfocus event"
-    end
-  end
-
+  
   describe "#parent" do
     bug "http://github.com/jarib/celerity/issues#issue/28", :celerity do
       it "gets the parent of this element" do
@@ -221,58 +227,62 @@ describe "Element" do
     end
   end
 
-  describe '#send_keys' do
-    before(:each) do
-      @c = RUBY_PLATFORM =~ /darwin/ ? :command : :control
-      browser.goto(WatirSpec.url_for('keylogger.html'))
-    end
-
-    let(:receiver) { browser.text_field(:id => 'receiver') }
-    let(:events)   { browser.element(:id => 'output').ps.size }
-
-    it 'sends keystrokes to the element' do
-      receiver.send_keys 'hello world'
-      receiver.value.should == 'hello world'
-      events.should == 11
-    end
-
-    it 'accepts arbitrary list of arguments' do
-      receiver.send_keys 'hello', 'world'
-      receiver.value.should == 'helloworld'
-      events.should == 10
-    end
-
-    # key combinations probably not ever possible on mobile devices?
-    bug "http://code.google.com/p/chromium/issues/detail?id=93879", [:webdriver, :chrome], [:webdriver, :iphone] do
-      it 'performs key combinations' do
-        receiver.send_keys 'foo'
-        receiver.send_keys [@c, 'a']
-        receiver.send_keys :backspace
-        receiver.value.should be_empty
-        events.should == 6
+  not_compliant_on :watir_nokogiri do
+    describe '#send_keys' do
+      before(:each) do
+        @c = RUBY_PLATFORM =~ /darwin/ ? :command : :control
+        browser.goto(WatirSpec.url_for('keylogger.html'))
       end
 
-      it 'performs arbitrary list of key combinations' do
-        receiver.send_keys 'foo'
-        receiver.send_keys [@c, 'a'], [@c, 'x']
-        receiver.value.should be_empty
-        events.should == 7
+      let(:receiver) { browser.text_field(:id => 'receiver') }
+      let(:events)   { browser.element(:id => 'output').ps.size }
+
+      it 'sends keystrokes to the element' do
+        receiver.send_keys 'hello world'
+        receiver.value.should == 'hello world'
+        events.should == 11
       end
 
-      it 'supports combination of strings and arrays' do
-        receiver.send_keys 'foo', [@c, 'a'], :backspace
-        receiver.value.should be_empty
-        events.should == 6
+      it 'accepts arbitrary list of arguments' do
+        receiver.send_keys 'hello', 'world'
+        receiver.value.should == 'helloworld'
+        events.should == 10
+      end
+
+      # key combinations probably not ever possible on mobile devices?
+      bug "http://code.google.com/p/chromium/issues/detail?id=93879", [:webdriver, :chrome], [:webdriver, :iphone] do
+        it 'performs key combinations' do
+          receiver.send_keys 'foo'
+          receiver.send_keys [@c, 'a']
+          receiver.send_keys :backspace
+          receiver.value.should be_empty
+          events.should == 6
+        end
+
+        it 'performs arbitrary list of key combinations' do
+          receiver.send_keys 'foo'
+          receiver.send_keys [@c, 'a'], [@c, 'x']
+          receiver.value.should be_empty
+          events.should == 7
+        end
+
+        it 'supports combination of strings and arrays' do
+          receiver.send_keys 'foo', [@c, 'a'], :backspace
+          receiver.value.should be_empty
+          events.should == 6
+        end
       end
     end
   end
+  
+  not_compliant_on :watir_nokogiri do
+    describe "#flash" do
 
-  describe "#flash" do
+      let(:h2) { browser.h2(:text => 'Add user') }
 
-    let(:h2) { browser.h2(:text => 'Add user') }
-
-    it 'returns the element on which it was called' do
-      h2.flash.should == h2
+      it 'returns the element on which it was called' do
+        h2.flash.should == h2
+      end
     end
   end
 end

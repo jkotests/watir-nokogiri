@@ -56,7 +56,8 @@ module WatirNokogiri
 		#
 
 		def select(str_or_rx)
-			select_by :text, str_or_rx
+			assert_exists
+			raise NotImplementedError, "not currently supported by WatirNokogiri"
 		end
 
 		#
@@ -70,7 +71,8 @@ module WatirNokogiri
 		#
 
 		def select_value(str_or_rx)
-			select_by :value, str_or_rx
+			assert_exists
+			raise NotImplementedError, "not currently supported by WatirNokogiri"
 		end
 
 		#
@@ -83,7 +85,7 @@ module WatirNokogiri
 
 		def selected?(str_or_rx)
 			assert_exists
-			matches = @element.css('option').select { |e| str_or_rx === e.text || str_or_rx === e.get_attribute(:label) }
+			matches = options.select { |e| str_or_rx === e.text || str_or_rx === e.attribute_value(:label) }
 
 			if matches.empty?
 				raise UnknownObjectException, "Unable to locate option matching #{str_or_rx.inspect}"
@@ -103,7 +105,6 @@ module WatirNokogiri
 			o = options.find { |e| e.selected? } || return
 			o.value
 		end
-
 
 		#
 		# Returns an array of currently selected options.

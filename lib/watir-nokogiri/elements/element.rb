@@ -56,6 +56,11 @@ module WatirNokogiri
 			@element.get_attribute(attribute_name) || ''
 		end
 
+    def click(*modifiers)
+      assert_exists
+      raise "Not implemented"
+    end
+
 		#
 		# @api private
 		#
@@ -87,8 +92,6 @@ module WatirNokogiri
 			end
 		end
 		alias_method :exist?, :exists?
-		alias_method :visible?, :exists?
-		alias_method :present?, :exists?
 
 		#
 		# Returns outer (inner + element itself) HTML code of element.
@@ -157,8 +160,24 @@ module WatirNokogiri
 
 		def parent
 			assert_exists
-			raise "Not implemented"
+
+      e = @element.parent
+
+      if e.kind_of?(Nokogiri::XML::Element)
+        WatirNokogiri.element_class_for(e.node_name.downcase).new(@parent, :element => e)
+      end
 		end
+
+    #
+    # Returns true if the element exists and is visible on the page.
+    #
+    # @return [Boolean]
+    #
+
+    def present?
+			assert_exists
+			raise "Not implemented"
+    end
 
 		#
 		# Returns tag name of the element.
@@ -182,6 +201,40 @@ module WatirNokogiri
 			@element.text.strip
 		end   
 
+    #
+    # Cast this Element instance to a more specific subtype.
+    #
+    # @example
+    #   browser.element(:xpath => "//input[@type='submit']").to_subtype
+    #   #=> #<WatirNokogiri::Button>
+    #
+
+    def to_subtype
+      elem = nokogiri()
+      tag_name = elem.node_name.downcase
+
+      klass = nil
+
+      if tag_name == "input"
+        klass = case elem.get_attribute(:type)
+          when *Button::VALID_TYPES
+            Button
+          when 'checkbox'
+            CheckBox
+          when 'radio'
+            Radio
+          when 'file'
+            FileField
+          else
+            TextField
+          end
+      else
+        klass = WatirNokogiri.element_class_for(tag_name)
+      end
+
+      klass.new(@parent, :element => elem)
+    end
+
 		#
 		# Returns value of the element.
 		#
@@ -192,7 +245,18 @@ module WatirNokogiri
 			assert_exists
 			attribute_value('value')
 		end
-		
+
+    #
+    # Returns true if this element is visible on the page.
+    #
+    # @return [Boolean]
+    #
+
+    def visible?
+      assert_exists
+      raise "Not implemented"
+    end
+    
 		#
 		# Returns the xpath of the current element.
 		#
@@ -221,6 +285,14 @@ module WatirNokogiri
 
 		private
 
+    #
+    # Returns attribute value if attribute exists; nil otherwise
+    #
+    def attribute?(attribute)
+      assert_exists
+      @element.get_attribute(attribute.to_s.downcase)
+    end
+  
 		def locator_class
 			ElementLocator
 		end    

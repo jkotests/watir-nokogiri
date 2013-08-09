@@ -115,12 +115,14 @@ describe "Del" do
 
   # Other
   describe "#click" do
-    it "fires events" do
-      browser.del(:class, 'footer').text.should_not include('Javascript')
-      browser.del(:class, 'footer').click
-      browser.del(:class, 'footer').text.should include('Javascript')
+    not_compliant_on :watir_nokogiri do
+      it "fires events" do
+        browser.del(:class, 'footer').text.should_not include('Javascript')
+        browser.del(:class, 'footer').click
+        browser.del(:class, 'footer').text.should include('Javascript')
+      end
     end
-
+    
     it "raises UnknownObjectException if the del doesn't exist" do
       lambda { browser.del(:id, "no_such_id").click }.should raise_error(UnknownObjectException)
       lambda { browser.del(:title, "no_such_title").click }.should raise_error(UnknownObjectException)

@@ -40,13 +40,15 @@ describe "TableCell" do
     end
   end
 
-  describe "#click" do
-    it "fires the table's onclick event" do
-      browser.td(:id, 't2_r1_c1').click
-      messages.should include('td')
+  not_compliant_on :watir_nokogiri do
+    describe "#click" do
+      it "fires the table's onclick event" do
+        browser.td(:id, 't2_r1_c1').click
+        messages.should include('td')
+      end
     end
   end
-
+  
   # Attribute methods
   describe "#text" do
     it "returns the text inside the table cell" do

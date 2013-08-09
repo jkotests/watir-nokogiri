@@ -16,10 +16,12 @@ describe "TableBodies" do
   end
   
   describe "#length" do
-    it "returns the correct number of table bodies (page context)" do
-      browser.tbodys.length.should == 5
+    bug "tbodys.length should include implicit tbody", :watir_nokogiri do
+      it "returns the correct number of table bodies (page context)" do
+        browser.tbodys.length.should == 5
+      end
     end
-
+    
     it "returns the correct number of table bodies (table context)" do
       browser.table(:index, 0).tbodys.length.should == 2
     end

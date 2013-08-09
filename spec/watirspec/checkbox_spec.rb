@@ -26,11 +26,13 @@ describe "CheckBox" do
       browser.checkbox(:xpath, "//input[@id='new_user_interests_books']").should exist
     end
 
-    it "returns true if the checkbox button exists (search by name and value)" do
-      browser.checkbox(:name => "new_user_interests", :value => 'cars').should exist
-      browser.checkbox(:xpath, "//input[@name='new_user_interests' and @value='cars']").set
+    not_compliant_on :watir_nokogiri do
+      it "returns true if the checkbox button exists (search by name and value)" do
+        browser.checkbox(:name => "new_user_interests", :value => 'cars').should exist
+        browser.checkbox(:xpath, "//input[@name='new_user_interests' and @value='cars']").set
+      end
     end
-
+    
     it "returns the first checkbox if given no args" do
       browser.checkbox.should exist
     end
@@ -198,42 +200,42 @@ describe "CheckBox" do
   end
 
   # Manipulation methods
+  
+  not_compliant_on :watir_nokogiri do
+    describe "#clear" do
+      it "raises ObjectDisabledException if the checkbox is disabled" do
+        browser.checkbox(:id, "new_user_interests_dentistry").should_not be_set
+        lambda { browser.checkbox(:id, "new_user_interests_dentistry").clear }.should raise_error(ObjectDisabledException)
+        lambda { browser.checkbox(:xpath, "//input[@id='new_user_interests_dentistry']").clear }.should raise_error(ObjectDisabledException)
+      end
 
-  describe "#clear" do
-    it "raises ObjectDisabledException if the checkbox is disabled" do
-      browser.checkbox(:id, "new_user_interests_dentistry").should_not be_set
-      lambda { browser.checkbox(:id, "new_user_interests_dentistry").clear }.should raise_error(ObjectDisabledException)
-      lambda { browser.checkbox(:xpath, "//input[@id='new_user_interests_dentistry']").clear }.should raise_error(ObjectDisabledException)
+      it "clears the checkbox button if it is set" do
+        browser.checkbox(:id, "new_user_interests_books").clear
+        browser.checkbox(:id, "new_user_interests_books").should_not be_set
+      end
+
+      it "clears the checkbox button when found by :xpath" do
+        browser.checkbox(:xpath, "//input[@id='new_user_interests_books']").clear
+        browser.checkbox(:xpath, "//input[@id='new_user_interests_books']").should_not be_set
+      end
+
+      it "raises UnknownObjectException if the checkbox button doesn't exist" do
+        lambda { browser.checkbox(:name, "no_such_id").clear }.should raise_error(UnknownObjectException)
+        lambda { browser.checkbox(:xpath, "//input[@id='no_such_id']").clear  }.should raise_error(UnknownObjectException)
+      end
     end
 
-    it "clears the checkbox button if it is set" do
-      browser.checkbox(:id, "new_user_interests_books").clear
-      browser.checkbox(:id, "new_user_interests_books").should_not be_set
-    end
+    describe "#set" do
+      it "sets the checkbox button" do
+        browser.checkbox(:id, "new_user_interests_cars").set
+        browser.checkbox(:id, "new_user_interests_cars").should be_set
+      end
 
-    it "clears the checkbox button when found by :xpath" do
-      browser.checkbox(:xpath, "//input[@id='new_user_interests_books']").clear
-      browser.checkbox(:xpath, "//input[@id='new_user_interests_books']").should_not be_set
-    end
-
-    it "raises UnknownObjectException if the checkbox button doesn't exist" do
-      lambda { browser.checkbox(:name, "no_such_id").clear }.should raise_error(UnknownObjectException)
-      lambda { browser.checkbox(:xpath, "//input[@id='no_such_id']").clear  }.should raise_error(UnknownObjectException)
-    end
-  end
-
-  describe "#set" do
-    it "sets the checkbox button" do
-      browser.checkbox(:id, "new_user_interests_cars").set
-      browser.checkbox(:id, "new_user_interests_cars").should be_set
-    end
-
-    it "sets the checkbox button when found by :xpath" do
-      browser.checkbox(:xpath, "//input[@id='new_user_interests_cars']").set
-      browser.checkbox(:xpath, "//input[@id='new_user_interests_cars']").should be_set
-    end
-    
-    not_compliant_on :watir_nokogiri do
+      it "sets the checkbox button when found by :xpath" do
+        browser.checkbox(:xpath, "//input[@id='new_user_interests_cars']").set
+        browser.checkbox(:xpath, "//input[@id='new_user_interests_cars']").should be_set
+      end
+      
       it "fires the onclick event" do
         browser.button(:id, "disabled_button").should be_disabled
         browser.checkbox(:id, "toggle_button_checkbox").set
@@ -241,16 +243,16 @@ describe "CheckBox" do
         browser.checkbox(:id, "toggle_button_checkbox").clear
         browser.button(:id, "disabled_button").should be_disabled
       end
-    end
-    
-    it "raises UnknownObjectException if the checkbox button doesn't exist" do
-      lambda { browser.checkbox(:name, "no_such_name").set  }.should raise_error(UnknownObjectException)
-      lambda { browser.checkbox(:xpath, "//input[@name='no_such_name']").set  }.should raise_error(UnknownObjectException)
-    end
+      
+      it "raises UnknownObjectException if the checkbox button doesn't exist" do
+        lambda { browser.checkbox(:name, "no_such_name").set  }.should raise_error(UnknownObjectException)
+        lambda { browser.checkbox(:xpath, "//input[@name='no_such_name']").set  }.should raise_error(UnknownObjectException)
+      end
 
-    it "raises ObjectDisabledException if the checkbox is disabled" do
-      lambda { browser.checkbox(:id, "new_user_interests_dentistry").set  }.should raise_error(ObjectDisabledException)
-      lambda { browser.checkbox(:xpath, "//input[@id='new_user_interests_dentistry']").set  }.should raise_error(ObjectDisabledException )
+      it "raises ObjectDisabledException if the checkbox is disabled" do
+        lambda { browser.checkbox(:id, "new_user_interests_dentistry").set  }.should raise_error(ObjectDisabledException)
+        lambda { browser.checkbox(:xpath, "//input[@id='new_user_interests_dentistry']").set  }.should raise_error(ObjectDisabledException )
+      end
     end
   end
 
@@ -265,14 +267,16 @@ describe "CheckBox" do
       browser.checkbox(:id, "new_user_interests_cars").should_not be_set
     end
 
-    it "returns the state for checkboxes with string values" do
-      browser.checkbox(:name => "new_user_interests", :value => 'cars').should_not be_set
-      browser.checkbox(:name => "new_user_interests", :value => 'cars').set
-      browser.checkbox(:name => "new_user_interests", :value => 'cars').should be_set
-      browser.checkbox(:name => "new_user_interests", :value => 'cars').clear
-      browser.checkbox(:name => "new_user_interests", :value => 'cars').should_not be_set
+    not_compliant_on :watir_nokogiri do
+      it "returns the state for checkboxes with string values" do
+        browser.checkbox(:name => "new_user_interests", :value => 'cars').should_not be_set
+        browser.checkbox(:name => "new_user_interests", :value => 'cars').set
+        browser.checkbox(:name => "new_user_interests", :value => 'cars').should be_set
+        browser.checkbox(:name => "new_user_interests", :value => 'cars').clear
+        browser.checkbox(:name => "new_user_interests", :value => 'cars').should_not be_set
+      end
     end
-
+    
     it "raises UnknownObjectException if the checkbox button doesn't exist" do
       lambda { browser.checkbox(:id, "no_such_id").set?  }.should raise_error(UnknownObjectException)
       lambda { browser.checkbox(:xpath, "//input[@id='no_such_id']").set?  }.should raise_error(UnknownObjectException)

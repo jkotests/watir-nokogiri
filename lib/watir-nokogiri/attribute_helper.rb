@@ -76,7 +76,7 @@ module WatirNokogiri
 		def define_boolean_attribute(mname, aname)
 			define_method mname do
 				assert_exists
-				@element.get_attribute(aname) == "true"
+        @element.get_attribute(aname)
 			end
 		end
 

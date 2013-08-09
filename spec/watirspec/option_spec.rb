@@ -73,24 +73,26 @@ describe "Option" do
   end
 
   describe "#select" do
-    it "selects the chosen option (page context)" do
-      browser.option(:text, "Denmark").select
-      browser.select_list(:name, "new_user_country").selected_options.map(&:text).should == ["Denmark"]
-    end
+    not_compliant_on :watir_nokogiri do
+      it "selects the chosen option (page context)" do
+        browser.option(:text, "Denmark").select
+        browser.select_list(:name, "new_user_country").selected_options.map(&:text).should == ["Denmark"]
+      end
 
-    it "selects the chosen option (select_list context)" do
-      browser.select_list(:name, "new_user_country").option(:text, "Denmark").select
-      browser.select_list(:name, "new_user_country").selected_options.map(&:text).should == ["Denmark"]
-    end
+      it "selects the chosen option (select_list context)" do
+        browser.select_list(:name, "new_user_country").option(:text, "Denmark").select
+        browser.select_list(:name, "new_user_country").selected_options.map(&:text).should == ["Denmark"]
+      end
 
-    it "selects the option when found by text (page context)" do
-      browser.option(:text, 'Sweden').select
-      browser.option(:text, 'Sweden').should be_selected
-    end
+      it "selects the option when found by text (page context)" do
+        browser.option(:text, 'Sweden').select
+        browser.option(:text, 'Sweden').should be_selected
+      end
 
-    it "selects the option when found by text (select_list context)" do
-      browser.select_list(:name, 'new_user_country').option(:text, 'Sweden').select
-      browser.select_list(:name, 'new_user_country').option(:text, 'Sweden').should be_selected
+      it "selects the option when found by text (select_list context)" do
+        browser.select_list(:name, 'new_user_country').option(:text, 'Sweden').select
+        browser.select_list(:name, 'new_user_country').option(:text, 'Sweden').should be_selected
+      end
     end
 
     # there's no onclick event for Option in IE / WebKit

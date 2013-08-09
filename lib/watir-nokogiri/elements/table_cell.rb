@@ -9,7 +9,7 @@ module WatirNokogiri
 
 		def colspan
 			value = attribute_value :colspan
-			value ? Integer(value) : 1
+			value != '' ? Integer(value) : 1
 		end
 	end # TableCell
 

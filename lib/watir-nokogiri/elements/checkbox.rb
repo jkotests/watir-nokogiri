@@ -1,61 +1,61 @@
 # encoding: utf-8
 
 module WatirNokogiri
-	class CheckBox < Input
+  class CheckBox < Input
 
-		#
-		# Sets checkbox to the given value.
-		#
-		# @example
-		#   checkbox.set?        #=> false
-		#   checkbox.set
-		#   checkbox.set?        #=> true
-		#   checkbox.set(false)
-		#   checkbox.set?        #=> false
-		#
-		# @param [Boolean] bool
-		#
+    #
+    # Sets checkbox to the given value.
+    #
+    # @example
+    #   checkbox.set?        #=> false
+    #   checkbox.set
+    #   checkbox.set?        #=> true
+    #   checkbox.set(false)
+    #   checkbox.set?        #=> false
+    #
+    # @param [Boolean] bool
+    #
 
-		def set(bool = true)
-			assert_exists
-			raise NotImplementedError, "not currently supported by WatirNokogiri"
-		end
+    def set(bool = true)
+      assert_exists
+      raise NotImplementedError, "not currently supported by WatirNokogiri"
+    end
 
-		#
-		# Returns true if the element is checked
-		# @return [Boolean]
-		#
+    #
+    # Returns true if the element is checked
+    # @return [Boolean]
+    #
 
-		def set?
-			assert_exists
-			@element.selected?
-		end
+    def set?
+      assert_exists
+      !@element.get_attribute('checked').nil?
+    end
 
-		#
-		# Unsets checkbox.
-		#
-		# Same as +set(false)+
-		#
+    #
+    # Unsets checkbox.
+    #
+    # Same as +set(false)+
+    #
 
-		def clear
-			set false
-		end
+    def clear
+      set false
+    end
 
-	end # CheckBox
+  end # CheckBox
 
-	module Container
-		def checkbox(*args)
-			CheckBox.new(self, extract_selector(args).merge(:tag_name => "input", :type => "checkbox"))
-		end
+  module Container
+    def checkbox(*args)
+      CheckBox.new(self, extract_selector(args).merge(:tag_name => "input", :type => "checkbox"))
+    end
 
-		def checkboxes(*args)
-			CheckBoxCollection.new(self, extract_selector(args).merge(:tag_name => "input", :type => "checkbox"))
-		end
-	end # Container
+    def checkboxes(*args)
+      CheckBoxCollection.new(self, extract_selector(args).merge(:tag_name => "input", :type => "checkbox"))
+    end
+  end # Container
 
-	class CheckBoxCollection < InputCollection
-		def element_class
-			CheckBox
-		end
-	end # CheckBoxCollection
+  class CheckBoxCollection < InputCollection
+    def element_class
+      CheckBox
+    end
+  end # CheckBoxCollection
 end # Watir

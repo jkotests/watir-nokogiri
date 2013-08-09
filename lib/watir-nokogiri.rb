@@ -14,25 +14,25 @@ require_relative 'watir-nokogiri/locators/child_cell_locator'
 require_relative 'watir-nokogiri/document'
 
 module WatirNokogiri
-	class << self
+  class << self
 
-		#
-		# @api private
-		#
+    #
+    # @api private
+    #
 
-		def tag_to_class
-		@tag_to_class ||= {}
-		end
+    def tag_to_class
+      @tag_to_class ||= {}
+    end
 
-		#
-		# @api private
-		#
+    #
+    # @api private
+    #
 
-		def element_class_for(tag_name)
-			tag_to_class[tag_name.to_sym] || HTMLElement
-		end
-		
-	end
+    def element_class_for(tag_name)
+      tag_to_class[tag_name.to_sym] || HTMLElement
+    end
+    
+  end
 end #WatirNokogiri
 
 require_relative 'watir-nokogiri/attribute_helper'

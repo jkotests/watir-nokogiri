@@ -128,7 +128,7 @@ describe "Image" do
     end
   end
 
-  not_compliant_on :webdriver, :watir_classic do
+  not_compliant_on :webdriver, :watir_classic, :watir_nokogiri do
     not_compliant_on :watir_classic do
       describe "#file_created_date" do
         it "returns the date the image was created as reported by the file system" do
@@ -152,20 +152,24 @@ describe "Image" do
   end
 
   describe "#height" do
-    it "returns the height of the image if the image exists" do
-      browser.image(:id, 'square').height.should == 88
+    not_compliant_on :watir_nokogiri do
+      it "returns the height of the image if the image exists" do
+        browser.image(:id, 'square').height.should == 88
+      end
     end
-
+    
     it "raises UnknownObjectException if the image doesn't exist" do
       lambda { browser.image(:index, 1337).height }.should raise_error(UnknownObjectException)
     end
   end
 
   describe "#width" do
-    it "returns the width of the image if the image exists" do
-      browser.image(:id, 'square').width.should == 88
+    not_compliant_on :watir_nokogiri do
+      it "returns the width of the image if the image exists" do
+        browser.image(:id, 'square').width.should == 88
+      end
     end
-
+    
     it "raises UnknownObjectException if the image doesn't exist" do
       lambda { browser.image(:index, 1337).width }.should raise_error(UnknownObjectException)
     end
@@ -173,16 +177,18 @@ describe "Image" do
 
   # Other
   describe "#loaded?" do
-    it "returns true if the image has been loaded" do
-      browser.image(:title, 'Circle').should be_loaded
-      browser.image(:alt, 'circle').should be_loaded
-      browser.image(:alt, /circle/).should be_loaded
+    not_compliant_on :watir_nokogiri do
+      it "returns true if the image has been loaded" do
+        browser.image(:title, 'Circle').should be_loaded
+        browser.image(:alt, 'circle').should be_loaded
+        browser.image(:alt, /circle/).should be_loaded
+      end
+    
+      it "returns false if the image has not been loaded" do
+        browser.image(:id, 'no_such_file').should_not be_loaded
+      end
     end
-
-    it "returns false if the image has not been loaded" do
-      browser.image(:id, 'no_such_file').should_not be_loaded
-    end
-
+    
     it "raises UnknownObjectException if the image doesn't exist" do
       lambda { browser.image(:id, 'no_such_image').loaded? }.should raise_error(UnknownObjectException)
       lambda { browser.image(:src, 'no_such_image').loaded? }.should raise_error(UnknownObjectException)
@@ -191,7 +197,7 @@ describe "Image" do
     end
   end
 
-  not_compliant_on :webdriver do
+  not_compliant_on :webdriver, :watir_nokogiri do
     describe "#save" do
       it "saves the image to a file" do
         file = "#{File.expand_path Dir.pwd}/sample.img.dat"

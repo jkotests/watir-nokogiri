@@ -195,97 +195,99 @@ describe "TextField" do
   end
 
   # Manipulation methods
-  describe "#append" do
-    it "appends the text to the text field" do
-      browser.text_field(:name, "new_user_occupation").append(" Append This")
-      browser.text_field(:name, "new_user_occupation").value.should == "Developer Append This"
+  not_compliant_on :watir_nokogiri do
+    describe "#append" do
+      it "appends the text to the text field" do
+        browser.text_field(:name, "new_user_occupation").append(" Append This")
+        browser.text_field(:name, "new_user_occupation").value.should == "Developer Append This"
+      end
+
+      it "appends multi-byte characters" do
+        browser.text_field(:name, "new_user_occupation").append(" ĳĳ")
+        browser.text_field(:name, "new_user_occupation").value.should == "Developer ĳĳ"
+      end
+
+      it "raises ObjectReadOnlyException if the object is read only" do
+        lambda { browser.text_field(:id, "new_user_code").append("Append This") }.should raise_error(ObjectReadOnlyException)
+      end
+
+      it "raises ObjectDisabledException if the object is disabled" do
+        lambda { browser.text_field(:name, "new_user_species").append("Append This") }.should raise_error(ObjectDisabledException)
+      end
+
+      it "raises UnknownObjectException if the object doesn't exist" do
+        lambda { browser.text_field(:name, "no_such_name").append("Append This") }.should raise_error(UnknownObjectException)
+      end
     end
 
-    it "appends multi-byte characters" do
-      browser.text_field(:name, "new_user_occupation").append(" ĳĳ")
-      browser.text_field(:name, "new_user_occupation").value.should == "Developer ĳĳ"
+    describe "#clear" do
+      it "removes all text from the text field" do
+        browser.text_field(:name, "new_user_occupation").clear
+        browser.text_field(:name, "new_user_occupation").value.should be_empty
+        browser.text_field(:id, "delete_user_comment").clear
+        browser.text_field(:id, "delete_user_comment").value.should be_empty
+      end
+
+      it "raises UnknownObjectException if the text field doesn't exist" do
+        lambda { browser.text_field(:id, "no_such_id").clear }.should raise_error(UnknownObjectException)
+      end
     end
 
-    it "raises ObjectReadOnlyException if the object is read only" do
-      lambda { browser.text_field(:id, "new_user_code").append("Append This") }.should raise_error(ObjectReadOnlyException)
+    describe "#value=" do
+      it "sets the value of the element" do
+        browser.text_field(:id, 'new_user_email').value = 'Hello Cruel World'
+        browser.text_field(:id, "new_user_email").value.should == 'Hello Cruel World'
+      end
+
+      it "is able to set multi-byte characters" do
+        browser.text_field(:name, "new_user_occupation").value = "ĳĳ"
+        browser.text_field(:name, "new_user_occupation").value.should == "ĳĳ"
+      end
+
+      it "sets the value of a textarea element" do
+        browser.text_field(:id, 'delete_user_comment').value = 'Hello Cruel World'
+        browser.text_field(:id, "delete_user_comment").value.should == 'Hello Cruel World'
+      end
+
+      it "raises UnknownObjectException if the text field doesn't exist" do
+        lambda { browser.text_field(:name, "no_such_name").value = 'yo' }.should raise_error(UnknownObjectException)
+      end
     end
 
-    it "raises ObjectDisabledException if the object is disabled" do
-      lambda { browser.text_field(:name, "new_user_species").append("Append This") }.should raise_error(ObjectDisabledException)
-    end
+    describe "#set" do
+      it "sets the value of the element" do
+        browser.text_field(:id, 'new_user_email').set('Bye Cruel World')
+        browser.text_field(:id, "new_user_email").value.should == 'Bye Cruel World'
+      end
 
-    it "raises UnknownObjectException if the object doesn't exist" do
-      lambda { browser.text_field(:name, "no_such_name").append("Append This") }.should raise_error(UnknownObjectException)
-    end
-  end
+      it "sets the value of a textarea element" do
+        browser.text_field(:id, 'delete_user_comment').set('Hello Cruel World')
+        browser.text_field(:id, "delete_user_comment").value.should == 'Hello Cruel World'
+      end
 
-  describe "#clear" do
-    it "removes all text from the text field" do
-      browser.text_field(:name, "new_user_occupation").clear
-      browser.text_field(:name, "new_user_occupation").value.should be_empty
-      browser.text_field(:id, "delete_user_comment").clear
-      browser.text_field(:id, "delete_user_comment").value.should be_empty
-    end
+      it "fires events" do
+        browser.text_field(:id, "new_user_username").set("Hello World")
+        browser.span(:id, "current_length").text.should == "11"
+      end
 
-    it "raises UnknownObjectException if the text field doesn't exist" do
-      lambda { browser.text_field(:id, "no_such_id").clear }.should raise_error(UnknownObjectException)
-    end
-  end
+      it "sets the value of a password field" do
+        browser.text_field(:name, 'new_user_password').set('secret')
+        browser.text_field(:name, 'new_user_password').value.should == 'secret'
+      end
 
-  describe "#value=" do
-    it "sets the value of the element" do
-      browser.text_field(:id, 'new_user_email').value = 'Hello Cruel World'
-      browser.text_field(:id, "new_user_email").value.should == 'Hello Cruel World'
-    end
+      it "sets the value when accessed through the enclosing Form" do
+        browser.form(:id, 'new_user').text_field(:name, 'new_user_password').set('secret')
+        browser.form(:id, 'new_user').text_field(:name, 'new_user_password').value.should == 'secret'
+      end
 
-    it "is able to set multi-byte characters" do
-      browser.text_field(:name, "new_user_occupation").value = "ĳĳ"
-      browser.text_field(:name, "new_user_occupation").value.should == "ĳĳ"
-    end
+      it "is able to set multi-byte characters" do
+        browser.text_field(:name, "new_user_occupation").set("ĳĳ")
+        browser.text_field(:name, "new_user_occupation").value.should == "ĳĳ"
+      end
 
-    it "sets the value of a textarea element" do
-      browser.text_field(:id, 'delete_user_comment').value = 'Hello Cruel World'
-      browser.text_field(:id, "delete_user_comment").value.should == 'Hello Cruel World'
-    end
-
-    it "raises UnknownObjectException if the text field doesn't exist" do
-      lambda { browser.text_field(:name, "no_such_name").value = 'yo' }.should raise_error(UnknownObjectException)
-    end
-  end
-
-  describe "#set" do
-    it "sets the value of the element" do
-      browser.text_field(:id, 'new_user_email').set('Bye Cruel World')
-      browser.text_field(:id, "new_user_email").value.should == 'Bye Cruel World'
-    end
-
-    it "sets the value of a textarea element" do
-      browser.text_field(:id, 'delete_user_comment').set('Hello Cruel World')
-      browser.text_field(:id, "delete_user_comment").value.should == 'Hello Cruel World'
-    end
-
-    it "fires events" do
-      browser.text_field(:id, "new_user_username").set("Hello World")
-      browser.span(:id, "current_length").text.should == "11"
-    end
-
-    it "sets the value of a password field" do
-      browser.text_field(:name, 'new_user_password').set('secret')
-      browser.text_field(:name, 'new_user_password').value.should == 'secret'
-    end
-
-    it "sets the value when accessed through the enclosing Form" do
-      browser.form(:id, 'new_user').text_field(:name, 'new_user_password').set('secret')
-      browser.form(:id, 'new_user').text_field(:name, 'new_user_password').value.should == 'secret'
-    end
-
-    it "is able to set multi-byte characters" do
-      browser.text_field(:name, "new_user_occupation").set("ĳĳ")
-      browser.text_field(:name, "new_user_occupation").value.should == "ĳĳ"
-    end
-
-    it "raises UnknownObjectException if the text field doesn't exist" do
-      lambda { browser.text_field(:id, "no_such_id").set('secret') }.should raise_error(UnknownObjectException)
+      it "raises UnknownObjectException if the text field doesn't exist" do
+        lambda { browser.text_field(:id, "no_such_id").set('secret') }.should raise_error(UnknownObjectException)
+      end
     end
   end
 end

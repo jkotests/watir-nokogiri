@@ -7,20 +7,22 @@ describe "TextArea" do
 
   let(:textarea) { browser.textarea }
 
-  it 'can set a value' do
-    textarea.set 'foo'
-    textarea.value.should == 'foo'
-  end
+  not_compliant_on :watir_nokogiri do
+    it 'can set a value' do
+      textarea.set 'foo'
+      textarea.value.should == 'foo'
+    end
 
-  it 'can clear a value' do
-    textarea.set 'foo'
-    textarea.clear
-    textarea.value.should == ''
-  end
+    it 'can clear a value' do
+      textarea.set 'foo'
+      textarea.clear
+      textarea.value.should == ''
+    end
 
-  it 'locates textarea by value' do
-    browser.textarea.set 'foo'
-    browser.textarea(:value, /foo/).should exist
-    browser.textarea(:value, 'foo').should exist
+    it 'locates textarea by value' do
+      browser.textarea.set 'foo'
+      browser.textarea(:value, /foo/).should exist
+      browser.textarea(:value, 'foo').should exist
+    end
   end
 end

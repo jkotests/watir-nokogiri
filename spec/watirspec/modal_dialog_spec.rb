@@ -3,7 +3,7 @@ require File.expand_path("../spec_helper", __FILE__)
 
 describe "Modal Dialog" do
 
-  not_compliant_on :webdriver do
+  not_compliant_on :webdriver, :watir_nokogiri do
     before :each do
       browser.goto(WatirSpec.url_for("modal_dialog.html"))
       browser.button(:value, 'Launch Dialog').click_no_wait

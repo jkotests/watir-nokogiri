@@ -34,14 +34,16 @@ describe "TableRow" do
       lambda { browser.tr(:no_such_how, 'some_value').exists? }.should raise_error(MissingWayOfFindingObjectException)
     end
   end
-
-  describe "#click" do
-    bug "http://github.com/watir/watir-webdriver/issues/issue/32",
-      [:webdriver, :internet_explorer],
-      [:webdriver, :chrome] do
-      it "fires the row's onclick event" do
-        browser.tr(:id, 'inner_first').click
-        messages.should include('tr')
+  
+  not_compliant_on :watir_nokogiri do
+    describe "#click" do
+      bug "http://github.com/watir/watir-webdriver/issues/issue/32",
+        [:webdriver, :internet_explorer],
+        [:webdriver, :chrome] do
+        it "fires the row's onclick event" do
+          browser.tr(:id, 'inner_first').click
+          messages.should include('tr')
+        end
       end
     end
   end
@@ -54,7 +56,7 @@ describe "TableRow" do
       table[2][0].text.should == "Table 1, Row 3, Cell 1"
     end
 
-    not_compliant_on :webdriver do #[] returns watir elements (lazy locate)
+    not_compliant_on :webdriver, :watir_nokogiri do #[] returns watir elements (lazy locate)
       it "raises UnknownCellException if the index is out of bounds" do
         lambda { table.tr(:index, 0)[1337] }.should raise_error(UnknownCellException)
         lambda { table[0][1337] }.should raise_error(UnknownCellException)

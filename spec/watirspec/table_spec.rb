@@ -90,9 +90,11 @@ describe "Table" do
   end
 
   describe "#click" do
-    it "fires the table's onclick event" do
-      browser.table(:id, 'inner').click
-      messages.should include('table')
+    not_compliant_on :watir_nokogiri do
+      it "fires the table's onclick event" do
+        browser.table(:id, 'inner').click
+        messages.should include('table')
+      end
     end
   end
 
@@ -103,7 +105,7 @@ describe "Table" do
       browser.table(:id, 'outer')[2].id.should == "outer_last"
     end
 
-    not_compliant_on :webdriver, :watir_classic do
+    not_compliant_on :webdriver, :watir_classic, :watir_nokogiri do
       it "raises UnknownRowException if the index is out of bounds" do
         lambda { browser.table(:id, 'outer')[1337] }.should raise_error(UnknownRowException)
       end

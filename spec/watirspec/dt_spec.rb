@@ -102,12 +102,14 @@ describe "Dt" do
 
   # Manipulation methods
   describe "#click" do
-    it "fires events when clicked" do
-      browser.dt(:id, 'education').text.should_not == 'changed'
-      browser.dt(:id, 'education').click
-      browser.dt(:id, 'education').text.should == 'changed'
+    not_compliant_on :watir_nokogiri do
+      it "fires events when clicked" do
+        browser.dt(:id, 'education').text.should_not == 'changed'
+        browser.dt(:id, 'education').click
+        browser.dt(:id, 'education').text.should == 'changed'
+      end
     end
-
+    
     it "raises UnknownObjectException if the element does not exist" do
       lambda { browser.dt(:id, "no_such_id").click }.should raise_error(UnknownObjectException)
       lambda { browser.dt(:title, "no_such_title").click }.should raise_error(UnknownObjectException)

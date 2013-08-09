@@ -20,16 +20,22 @@ module WatirNokogiri
 
 		def locate_all()
 			selector = normalized_selector
-			
+
 			if selector.has_key? :index
 				raise ArgumentError, "can't locate all elements by :index"
 			end
 
-			how, what = given_xpath(selector) || build_nokogiri_selector(selector)
-			if how
-				@nokogiri.xpath(what)
-			else
-				find_by_regexp_selector(selector, :select)
+			how, what = given_css(selector) ||
+                        given_xpath(selector) || 
+                        build_nokogiri_selector(selector)
+                    
+			case how
+        when :css
+          @nokogiri.css(what)
+        when :xpath
+          @nokogiri.xpath(what)
+        else
+          find_by_regexp_selector(selector, :select)
 			end				
 		end
 				
@@ -68,7 +74,7 @@ module WatirNokogiri
 			rx_selector
 		end			
 
-		def assert_valid_as_attribute(attribute)
+		def assert_valid_as_attribute(attribute)     
 			unless valid_attribute? attribute or attribute.to_s =~ /^data_.+$/
 				raise MissingWayOfFindingObjectException, "invalid attribute: #{attribute.inspect}"
 			end
@@ -123,7 +129,7 @@ module WatirNokogiri
 
 		def normalize_selector(how, what)
 			case how
-			when :tag_name, :text, :xpath, :index, :class, :label
+			when :tag_name, :text, :xpath, :index, :class, :label, :css
 				# include :class since the valid attribute is 'class_name'
 				# include :for since the valid attribute is 'html_for'
 				[how, what]
@@ -177,6 +183,28 @@ module WatirNokogiri
 
 			false
 		end
+    
+		def given_css(selector)  
+			return unless css = selector.delete(:css)
+
+			unless selector.empty? || can_be_combined_with_css?(selector)
+				raise ArgumentError, ":css cannot be combined with other selectors (#{selector.inspect})"
+			end
+
+			[:css, xpath]
+		end
+
+		def can_be_combined_with_css?(selector)
+			# ouch - is this worth it?
+			keys = selector.keys
+			return true if keys == [:tag_name]
+
+			if selector[:tag_name] == "input"
+				return keys == [:tag_name, :type] || keys == [:type, :tag_name]
+			end
+
+			false
+		end   
 
 		def build_nokogiri_selector(selectors)
 			unless selectors.values.any? { |e| e.kind_of? Regexp }

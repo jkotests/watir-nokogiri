@@ -115,12 +115,14 @@ describe "Span" do
 
   # Other
   describe "#click" do
-    it "fires events" do
-      browser.span(:class, 'footer').text.should_not include('Javascript')
-      browser.span(:class, 'footer').click
-      browser.span(:class, 'footer').text.should include('Javascript')
+    not_compliant_on :watir_nokogiri do
+      it "fires events" do
+        browser.span(:class, 'footer').text.should_not include('Javascript')
+        browser.span(:class, 'footer').click
+        browser.span(:class, 'footer').text.should include('Javascript')
+      end
     end
-
+    
     it "raises UnknownObjectException if the span doesn't exist" do
       lambda { browser.span(:id, "no_such_id").click }.should raise_error(UnknownObjectException)
       lambda { browser.span(:title, "no_such_title").click }.should raise_error(UnknownObjectException)

@@ -50,7 +50,7 @@ module WatirNokogiri
 
 		def selected?
 			assert_exists
-			@element.selected?
+			!@element.get_attribute('selected').nil?
 		end
 
 		#

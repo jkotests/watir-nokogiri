@@ -19,7 +19,7 @@ module WatirNokogiri
 
 		def set?
 			assert_exists
-			@element.selected?
+			!@element.get_attribute('checked').nil?
 		end
 
 	end # Radio

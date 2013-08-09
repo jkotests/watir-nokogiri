@@ -12,8 +12,11 @@ module WatirNokogiri
     alias_method :nokogiri, :driver # ensures duck typing with WatirNokogiri::Element
 
     class << self
-      def start(url, browser = :firefox, *args)
-        raise NotImplementedError, "not currently supported by WatirNokogiri"
+      def start(file_path)
+        b = new()
+        b.goto file_path
+
+        b
       end
     end
 
@@ -73,7 +76,7 @@ module WatirNokogiri
     end
 
     def name
-      raise NotImplementedError, "not currently supported by WatirNokogiri"
+      :nokogiri
     end
 
     #

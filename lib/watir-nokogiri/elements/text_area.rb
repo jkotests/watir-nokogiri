@@ -1,22 +1,22 @@
 module WatirNokogiri
-	class TextArea < HTMLElement
-		include UserEditable
+  class TextArea < HTMLElement
+    include UserEditable
 
-		private
+    private
 
-		def locator_class
-			TextAreaLocator
-		end
+    def locator_class
+      TextAreaLocator
+    end
 
-	end # TextArea
+  end # TextArea
 
-	class TextAreaCollection < ElementCollection
+  class TextAreaCollection < ElementCollection
 
-		private
+    private
 
-		def locator_class
-			TextAreaLocator
-		end
+    def locator_class
+      TextAreaLocator
+    end
 
-	end # TextAreaCollection
+  end # TextAreaCollection
 end # WatirNokogiri

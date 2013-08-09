@@ -1,45 +1,45 @@
 # encoding: utf-8
 module WatirNokogiri
-	class FileField < Input
+  class FileField < Input
 
-		#
-		# Set the file field to the given path
-		#
-		# @param [String] a path
-		# @raise [Errno::ENOENT] if the file doesn't exist
-		#
+    #
+    # Set the file field to the given path
+    #
+    # @param [String] a path
+    # @raise [Errno::ENOENT] if the file doesn't exist
+    #
 
-		def set(path)
-			assert_exists
-			raise NotImplementedError, "not currently supported by WatirNokogiri"
-		end
+    def set(path)
+      assert_exists
+      raise NotImplementedError, "not currently supported by WatirNokogiri"
+    end
 
-		#
-		# Sets the file field to the given path
-		#
-		# @param [String] path
-		#
+    #
+    # Sets the file field to the given path
+    #
+    # @param [String] path
+    #
 
-		def value=(path)
-			assert_exists
-			raise NotImplementedError, "not currently supported by WatirNokogiri"
-		end
+    def value=(path)
+      assert_exists
+      raise NotImplementedError, "not currently supported by WatirNokogiri"
+    end
 
-	end # FileField
+  end # FileField
 
-	module Container
-		def file_field(*args)
-			FileField.new(self, extract_selector(args).merge(:tag_name => "input", :type => "file"))
-		end
+  module Container
+    def file_field(*args)
+      FileField.new(self, extract_selector(args).merge(:tag_name => "input", :type => "file"))
+    end
 
-		def file_fields(*args)
-			FileFieldCollection.new(self, extract_selector(args).merge(:tag_name => "input", :type => "file"))
-		end
-	end # Container
+    def file_fields(*args)
+      FileFieldCollection.new(self, extract_selector(args).merge(:tag_name => "input", :type => "file"))
+    end
+  end # Container
 
-	class FileFieldCollection < InputCollection
-		def element_class
-			FileField
-		end
-	end # FileFieldCollection
+  class FileFieldCollection < InputCollection
+    def element_class
+      FileField
+    end
+  end # FileFieldCollection
 end # WatirNokogiri

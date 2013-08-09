@@ -7,10 +7,6 @@ module WatirNokogiri
 
       element = locate_iframe || locate_frame
       element or raise UnknownFrameException, "unable to locate frame/iframe using #{@selector.inspect}"
-
-      #~ @parent.reset!
-
-      #~ FramedDriver.new(element, driver)
     end
 
     def assert_exists
@@ -76,49 +72,4 @@ module WatirNokogiri
     end
   end
 
-  # @api private
-  #
-  # another hack..
-  #
-
-  #~ class FramedDriver
-    #~ def initialize(element, driver)
-      #~ @element = element
-      #~ @driver = driver
-    #~ end
-
-    #~ def ==(other)
-      #~ @element == other.nokogiri
-    #~ end
-    #~ alias_method :eql?, :==
-
-    #~ def send_keys(*args)
-      #~ switch!
-      #~ @driver.switch_to.active_element.send_keys(*args)
-    #~ end
-
-    #~ protected
-
-    #~ def nokogiri
-      #~ @element
-    #~ end
-
-    #~ private
-
-    #~ def method_missing(meth, *args, &blk)
-      #~ if @driver.respond_to?(meth)
-        #~ switch!
-        #~ @driver.send(meth, *args, &blk)
-      #~ else
-        #~ @element.send(meth, *args, &blk)
-      #~ end
-    #~ end
-
-    #~ def switch!
-      #~ @driver.switch_to.frame @element
-    #~ rescue Selenium::WebDriver::Error::NoSuchFrameError => e
-      #~ raise UnknownFrameException, e.message
-    #~ end
-
-  #~ end # FramedDriver
 end # WatirNokogiri

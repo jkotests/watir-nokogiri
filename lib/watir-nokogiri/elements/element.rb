@@ -87,7 +87,7 @@ module WatirNokogiri
 			begin
 				assert_exists
 				return true
-			rescue UnknownObjectException
+			rescue UnknownObjectException, UnknownFrameException
 				return false
 			end
 		end

@@ -160,28 +160,30 @@ describe "Element" do
   end
 
   describe "#visible?" do
-    it "returns true if the element is visible" do
-      browser.text_field(:id, "new_user_email").should be_visible
-    end
-    
-    it "returns true if the element has style='visibility: visible' even if parent has style='visibility: hidden'" do
-      browser.div(:id => "visible_child").should be_visible
-    end
+    not_compliant_on :watir_nokogiri do
+      it "returns true if the element is visible" do
+        browser.text_field(:id, "new_user_email").should be_visible
+      end
+      
+      it "returns true if the element has style='visibility: visible' even if parent has style='visibility: hidden'" do
+        browser.div(:id => "visible_child").should be_visible
+      end
 
-    it "returns false if the element is input element where type == 'hidden'" do
-      browser.hidden(:id, "new_user_interests_dolls").should_not be_visible
-    end
+      it "returns false if the element is input element where type == 'hidden'" do
+        browser.hidden(:id, "new_user_interests_dolls").should_not be_visible
+      end
 
-    it "returns false if the element has style='display: none;'" do
-      browser.div(:id, 'changed_language').should_not be_visible
-    end
+      it "returns false if the element has style='display: none;'" do
+        browser.div(:id, 'changed_language').should_not be_visible
+      end
 
-    it "returns false if the element has style='visibility: hidden;" do
-      browser.div(:id, 'wants_newsletter').should_not be_visible
-    end
+      it "returns false if the element has style='visibility: hidden;" do
+        browser.div(:id, 'wants_newsletter').should_not be_visible
+      end
 
-    it "returns false if one of the parent elements is hidden" do
-      browser.div(:id, 'hidden_parent').should_not be_visible
+      it "returns false if one of the parent elements is hidden" do
+        browser.div(:id, 'hidden_parent').should_not be_visible
+      end
     end
   end
 

@@ -1,7 +1,7 @@
 Watir-Nokogiri
 ==============
 
-Watir-Nokogiri is an HTML parser using a Watir's API.
+Watir-Nokogiri is an HTML parser using Watir's API.
 
 Background
 -----------

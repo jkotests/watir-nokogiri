@@ -198,7 +198,7 @@ module WatirNokogiri
 
     def text()
       assert_exists
-      @element.text.strip
+      @element.text.strip.gsub(/\s+/, ' ')
     end   
 
     #

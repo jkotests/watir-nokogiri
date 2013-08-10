@@ -31,7 +31,7 @@ module WatirNokogiri
       elements = super
 
       if locator_class == ChildRowLocator and @parent.kind_of? Table
-        elements = elements.sort_by { |row| row.get_attribute(:rowIndex).to_i }
+        elements = elements.sort_by { |row| puts row.get_attribute(:rowIndex).to_i; row.get_attribute(:rowIndex).to_i }
       end
 
       elements

@@ -19,32 +19,32 @@ describe "Browser" do
   end
 
   # this should be rewritten - the actual string returned varies a lot between implementations
-  describe "#html" do
-    bug "#html changes charset", :watir_nokogiri do
-      it "returns the DOM of the page as an HTML string" do
-        browser.goto(WatirSpec.url_for("right_click.html"))
-        html = browser.html.downcase # varies between browsers
+describe "#html" do
+  bug "https://github.com/jkotests/watir-nokogiri/issues/2", :watir_nokogiri do
+    it "returns the DOM of the page as an HTML string" do
+      browser.goto(WatirSpec.url_for("right_click.html"))
+      html = browser.html.downcase # varies between browsers
 
-        html.should =~ /^<html/
-        html.should include('<meta ')
-        html.should include(' content="text/html; charset=utf-8"')
+      html.should =~ /^<html/
+      html.should include('<meta ')
+      html.should include(' content="text/html; charset=utf-8"')
 
-        not_compliant_on :internet_explorer do
-          html.should include(' http-equiv="content-type"')
-        end
+      not_compliant_on :internet_explorer do
+        html.should include(' http-equiv="content-type"')
+      end
 
-        deviates_on :internet_explorer9, :internet_explorer10 do
-          html.should include(' http-equiv="content-type"')
-        end
+      deviates_on :internet_explorer9, :internet_explorer10 do
+        html.should include(' http-equiv="content-type"')
+      end
 
-        not_compliant_on :internet_explorer9, :internet_explorer10 do
-          deviates_on :internet_explorer do
-            html.should include(' http-equiv=content-type')
-          end
+      not_compliant_on :internet_explorer9, :internet_explorer10 do
+        deviates_on :internet_explorer do
+          html.should include(' http-equiv=content-type')
         end
       end
     end
   end
+end
 
   describe "#title" do
     it "returns the current page title" do

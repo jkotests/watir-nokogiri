@@ -31,7 +31,9 @@ module WatirNokogiri
       elements = super
 
       if locator_class == ChildRowLocator and @parent.kind_of? Table
-        elements = elements.sort_by { |row| puts row.get_attribute(:rowIndex).to_i; row.get_attribute(:rowIndex).to_i }
+        # This sorting will not do anything since nokogiri does not know the rowIndex
+        # BUG: https://github.com/jkotests/watir-nokogiri/issues/1
+        elements = elements.sort_by { |row| row.get_attribute(:rowIndex).to_i }
       end
 
       elements

@@ -68,18 +68,20 @@ describe "Table" do
   end
 
   describe "#hashes" do
-    it "returns an Array of Hashes for the common table usage" do
-      browser.table(:id => "axis_example").hashes.should == [
-        { "" => "March 2008",     "Before income tax" => "",       "Income tax" => "",      "After income tax" => ""      },
-        { "" => "Gregory House",  "Before income tax" => "5 934",  "Income tax" => "1 347", "After income tax" => "4 587" },
-        { "" => "Hugh Laurie",    "Before income tax" => "6 300",  "Income tax" => "1 479", "After income tax" => "4 821" },
-        { "" => "April 2008",     "Before income tax" => "",       "Income tax" => "",      "After income tax" => ""      },
-        { "" => "Gregory House",  "Before income tax" => "5 863",  "Income tax" => "1 331", "After income tax" => "4 532" },
-        { "" => "Hugh Laurie",    "Before income tax" => "6 252",  "Income tax" => "1 420", "After income tax" => "4 832" },
-        { "" => "Sum",            "Before income tax" => "24 349", "Income tax" => "5 577", "After income tax" => "18 722"},
-      ]
+    bug 'https://github.com/jkotests/watir-nokogiri/issues/1', :watir_nokogiri do
+      it "returns an Array of Hashes for the common table usage" do
+        browser.table(:id => "axis_example").hashes.should == [
+          { "" => "March 2008",     "Before income tax" => "",       "Income tax" => "",      "After income tax" => ""      },
+          { "" => "Gregory House",  "Before income tax" => "5 934",  "Income tax" => "1 347", "After income tax" => "4 587" },
+          { "" => "Hugh Laurie",    "Before income tax" => "6 300",  "Income tax" => "1 479", "After income tax" => "4 821" },
+          { "" => "April 2008",     "Before income tax" => "",       "Income tax" => "",      "After income tax" => ""      },
+          { "" => "Gregory House",  "Before income tax" => "5 863",  "Income tax" => "1 331", "After income tax" => "4 532" },
+          { "" => "Hugh Laurie",    "Before income tax" => "6 252",  "Income tax" => "1 420", "After income tax" => "4 832" },
+          { "" => "Sum",            "Before income tax" => "24 349", "Income tax" => "5 577", "After income tax" => "18 722"},
+        ]
+      end
     end
-
+    
     it "raises an error if the table could not be parsed" do
       browser.goto(WatirSpec.url_for("uneven_table.html"))
 

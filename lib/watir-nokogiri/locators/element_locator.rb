@@ -12,10 +12,16 @@ module WatirNokogiri
     def locate()	
       idx = @selector.delete(:index)
       if idx
-        locate_all[idx]
+        element = locate_all[idx]
       else
-        locate_all.first
+        element = locate_all.first
       end
+
+      # This actually only applies when finding by xpath - browser.text_field(:xpath, "//input[@type='radio']")
+      # We don't need to validate the element if we built the xpath ourselves.
+      # It is also used to alter behavior of methods locating more than one type of element
+      # (e.g. text_field locates both input and textarea)
+      validate_element(element) if element
     end
 
     def locate_all()
@@ -44,7 +50,7 @@ module WatirNokogiri
       rx_selector = delete_regexps_from(selector)
 
       if rx_selector.has_key?(:label) && should_use_label_element?
-        label = label_from_text(rx_selector.delete(:label)) || return
+        label = label_from_text(rx_selector.delete(:label)) || (return [])
         if (id = label.get_attribute('for'))
           selector[:id] = id
         else
@@ -270,6 +276,23 @@ module WatirNokogiri
         "@#{key.to_s.gsub("_", "-")}"
       end
     end
+
+    def validate_element(element)
+      tn = @selector[:tag_name]
+      element_tag_name = element.node_name.downcase
+
+      return if tn && !tag_name_matches?(element_tag_name, tn)
+
+      if element_tag_name == 'input'
+        return if @selector[:type] && @selector[:type] != element.get_attribute(:type).downcase
+      end
+
+      element
+    end
+    
+    def tag_name_matches?(element_tag_name, tag_name)
+      tag_name === element_tag_name
+    end    
 
   end # ElementLocator
 end # WatirNokogiri

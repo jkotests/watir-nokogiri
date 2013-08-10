@@ -46,7 +46,7 @@ module WatirNokogiri
     end
 
     def validate_element(element)
-      return if element.node_name.downcase == "input" && !Button::VALID_TYPES.include?(element.get_attribute(:type))
+      return if element.node_name.downcase == "input" && !Button::VALID_TYPES.include?(element.get_attribute(:type).downcase)
       super
     end
 

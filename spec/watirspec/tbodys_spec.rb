@@ -16,7 +16,7 @@ describe "TableBodies" do
   end
   
   describe "#length" do
-    bug "tbodys.length should include implicit tbody", :watir_nokogiri do
+    bug "https://github.com/jkotests/watir-nokogiri/issues/3", :watir_nokogiri do
       it "returns the correct number of table bodies (page context)" do
         browser.tbodys.length.should == 5
       end

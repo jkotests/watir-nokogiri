@@ -29,9 +29,9 @@ module WatirNokogiri
     end
 
     def inspect
-      '#<%s:0x%x url=%s title=%s>' % [self.class, hash*2, url.inspect, title.inspect]
+      '#<%s:0x%x>' % [self.class, hash*2]
     rescue
-      '#<%s:0x%x closed=%s>' % [self.class, hash*2, @closed.to_s]
+      '#<%s:0x%x closed=%s>' % [self.class, hash*2, exist?.to_s]
     end
 
     #

@@ -62,6 +62,15 @@ module WatirNokogiri
     end
 
     #
+    # Returns the css path for the element
+    #
+
+    def css_path()
+      assert_exists
+      @element.css_path
+    end
+    
+    #
     # @api private
     #
 

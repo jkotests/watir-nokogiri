@@ -8,8 +8,21 @@ Background
 
 Watir (classic and webdriver) can have performance issues when parsing large HTML pages. One solution has been to extract the page's HTML using Watir and then parse the HTML with an HTML parser (ex Nokogiri). This required learning two APIs - Watir and the HTML parser. Watir-Nokogiri eliminates the need to learn an HTML parser API by applying the Watir API to the HTML parser Nokogiri.
 
+Installation
+-----------
+
+```ruby
+gem install 'watir-nokogiri'
+```
+
 Usage
 -----------
+
+To use Watir-Nokogiri:
+
+```ruby 
+require 'watir-nokogiri'
+```
 
 Watir-Nokogiri can parse a string containing HTML.
 

@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.version     = WatirNokogiri::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Justin Ko"]
+  s.email       = 'jkotest@gmail.com'
   s.homepage    = "https://github.com/jkotests/watir-nokogiri"
   s.summary     = %q{Watir HTML parser}
   s.description = %q{Watir-Nokogiri is an HTML parser using Watir's API.}
